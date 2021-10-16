@@ -4,7 +4,6 @@ let wrongFieldX = document.getElementById("wrong_field_X");
 let wrongFieldY = document.getElementById("wrong_field_Y");
 let wrongFieldR = document.getElementById("wrong_field_R");
 
-
 function submit() {
     let value = $('input[name="y_value"]:checked').val();
     alert("y=" + value);
@@ -18,3 +17,16 @@ $("#R").change(function () {
     clearCanvas()
     drawCanvas()
 });
+
+function clickOnChart(canvas, event) {
+    let rect = canvas.getBoundingClientRect()
+    let width = canvas.width;
+    let height = canvas.height;
+    let x = (event.clientX - rect.left - width / 2) / step;
+    let y = (height / 2 - event.clientY + rect.top) / step;
+    let r = $("#R").val();
+    alert("x=" + x)
+    alert("y=" + y)
+    alert("r=" + r)
+
+}

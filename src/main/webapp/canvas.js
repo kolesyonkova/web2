@@ -6,7 +6,7 @@ canvas.width = 510;
 canvas.height = 510;
 let width = canvas.width;
 let height = canvas.height;
-let center = width / 2
+canvas.addEventListener('mousedown', event => clickOnChart(canvas, event));
 
 function drawCanvas() {
     let valR = $('#R').val() * step;
