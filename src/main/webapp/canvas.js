@@ -10,10 +10,11 @@ canvas.addEventListener('mousedown', event => clickOnChart(canvas, event));
 
 function drawCanvas() {
     let valR = $('#R').val() * step;
-    drawAXIS(valR)
+    drawAXIS()
     drawRectangle(valR)
     drawTriangle(valR)
     drawCircle(valR)
+    initCanvas()
 }
 
 function drawTriangle(valR) {
@@ -46,7 +47,7 @@ function drawRectangle(valR) {
 
 }
 
-function drawAXIS(valR) {
+function drawAXIS() {
     context.strokeStyle = 'black';
     context.fillStyle = 'black';
     context.globalAlpha = 1.0;
@@ -58,14 +59,6 @@ function drawAXIS(valR) {
     context.moveTo(0, height / 2);
     context.lineTo(width, height / 2);
     context.stroke();
-    // context.strokeText("R/2", (valR * step) / 2 + width / 2, center - 2);
-    // context.strokeText("R", width / 2 + valR * step, center - 2);
-    // context.strokeText("R/2", center + 2, center - (valR * step) / 2);
-    // context.strokeText("R", center + 2, center - (valR * step - 10));
-    // context.strokeText("-R/2", center - (valR * step) / 2, center - 2);
-    // context.strokeText("-R", center - valR * step, center - 2);
-    // context.strokeText("-R/2", center + 2, center + (valR * step) / 2);
-    // context.strokeText("-R", center + 2, center + valR * step);
     context.strokeText("Y", 240, 10);
     context.strokeText("X", 500, height / 2 - 10);
     context.stroke();
