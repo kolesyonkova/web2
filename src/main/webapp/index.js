@@ -1,8 +1,20 @@
-document.getElementById("send-button").addEventListener("click", submit);
+document.getElementById("send-button").addEventListener("click", dataFromButtons);
 document.getElementById("clear-button").addEventListener("click", clear);
 let wrongFieldX = document.getElementById("wrong_field_X");
 let wrongFieldY = document.getElementById("wrong_field_Y");
 let wrongFieldR = document.getElementById("wrong_field_R");
+
+function dataFromButtons() {
+    wrongFieldX.textContent = ""
+    wrongFieldY.textContent = ""
+    wrongFieldR.textContent = ""
+    let valX = parseFloat(document.getElementById("X").value.substring(0, 10).replace(',', '.'));
+    let valY = $('input[name="y_value"]:checked').val();
+    let valR = $('#R').val();
+    if (checkX() & checkY()) {
+        submit(valX, valY, valR)
+    }
+}
 
 function clear() {
     return new Promise(function (resolve) {
@@ -45,49 +57,41 @@ function checkY() {
     return true;
 }
 
-function submit() {
-    wrongFieldX.textContent = ""
-    wrongFieldY.textContent = ""
-    wrongFieldR.textContent = ""
-    let valX = parseFloat(document.getElementById("X").value.substring(0, 10).replace(',', '.'));
-    let valY = $('input[name="y_value"]:checked').val();
-    let valR = $('#R').val();
-    if (checkX() & checkY()) {
-        return new Promise(function (resolve) {
-                $.get('/servlet', {
-                    'x': valX,
-                    'y': valY,
-                    'r': valR
-                }).done(function (data) {
-                        $("#result_table tr:gt(0)").remove();
-                        console.log(data)
-                        let par = data;
-                        if (par !== "remove") {
-                            let result = JSON.parse(par);
-                            for (let i in result.response) {
-                                let newRow = '<tr>';
-                                newRow += '<td>' + result.response[i].xval + '</td>';
-                                newRow += '<td>' + result.response[i].yval + '</td>';
-                                newRow += '<td>' + result.response[i].rval + '</td>';
-                                if (result.response[i].out === "Да") {
-                                    newRow += '<td><div style="color:#279327">' + result.response[i].out + '</div></td>';
-                                } else {
+function submit(valX, valY, valR) {
+    return new Promise(function (resolve) {
+            $.get('/servlet', {
+                'x': valX,
+                'y': valY,
+                'r': valR
+            }).done(function (data) {
+                    $("#result_table tr:gt(0)").remove();
+                    console.log(data)
+                    let par = data;
+                    if (par !== "remove") {
+                        let result = JSON.parse(par);
+                        for (let i in result.response) {
+                            let newRow = '<tr>';
+                            newRow += '<td>' + result.response[i].xval + '</td>';
+                            newRow += '<td>' + result.response[i].yval + '</td>';
+                            newRow += '<td>' + result.response[i].rval + '</td>';
+                            if (result.response[i].out === "Да") {
+                                newRow += '<td><div style="color:#279327">' + result.response[i].out + '</div></td>';
+                            } else {
 
-                                    newRow += '<td><div style="color:#e11a1a">' + result.response[i].out + '</div></td>';
-                                }
-                                newRow += '<td>' + result.response[i].sendingTime + '</td>';
-                                newRow += '<td>' + result.response[i].totalProcessingTime + '</td>';
-                                newRow += '</tr>';
-                                $('#result_table').append(newRow);
+                                newRow += '<td><div style="color:#e11a1a">' + result.response[i].out + '</div></td>';
                             }
+                            newRow += '<td>' + result.response[i].sendingTime + '</td>';
+                            newRow += '<td>' + result.response[i].totalProcessingTime + '</td>';
+                            newRow += '</tr>';
+                            $('#result_table').append(newRow);
                         }
                     }
-                ).fail(function (err) {
-                    alert(err);
-                });
-            }
-        );
-    }
+                }
+            ).fail(function (err) {
+                alert(err);
+            });
+        }
+    );
 }
 
 
@@ -103,7 +107,5 @@ function clickOnChart(canvas, event) {
     let x = (event.clientX - rect.left - width / 2) / step;
     let y = (height / 2 - event.clientY + rect.top) / step;
     let r = $("#R").val();
-    alert("x=" + x)
-    alert("y=" + y)
-    alert("r=" + r)
+    submit(x, y, r)
 }

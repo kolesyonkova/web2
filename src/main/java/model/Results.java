@@ -18,6 +18,10 @@ public class Results {
         this.hitList = hitList;
     }
 
+    public void setHitList(List<Hit> hitList) {
+        this.hitList = hitList;
+    }
+
     public String toJson() {
         List<Hit> hits = hitList;
         String res = "{" + "\"response\":[";

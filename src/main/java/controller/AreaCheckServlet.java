@@ -61,7 +61,7 @@ public class AreaCheckServlet extends HttpServlet {
     }
 
     public boolean checkCircle(double x, double y, double r) {
-        return (x * x + y * y) <= r && x <= 0 && y <= 0;
+        return (x * x + y * y) <= r*r && x <= 0 && y <= 0;
     }
 
 }
