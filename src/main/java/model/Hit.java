@@ -74,7 +74,7 @@ public class Hit {
                 "\"rval\":" + "\"" + this.getR() + "\"" + "," +
                 "\"out\":" + "\"" + this.getResult() + "\"" + "," +
                 "\"sendingTime\":" + "\"" + this.getLocalTime() + "\"" + "," +
-                "\"totalProcessingTime\":" + "\"" + String.valueOf(BigDecimal.valueOf(this.getProcessingTime())).substring(0,8) +" sec"+ "\"" +
+                "\"totalProcessingTime\":" + "\"" + String.valueOf(BigDecimal.valueOf(this.getProcessingTime())).substring(0, 8) + " sec" + "\"" +
                 "}";
     }
 }

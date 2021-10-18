@@ -44,12 +44,24 @@ public class AreaCheckServlet extends HttpServlet {
         double x = Double.parseDouble(req.getParameter("x"));
         double y = Double.parseDouble(req.getParameter("y"));
         double r = Double.parseDouble(req.getParameter("r"));
-        boolean checkHit = isHit(x, y, r);
-        return new Hit(x, y, r, checkHit ? "Да" : "Нет", new SimpleDateFormat("HH:mm:ss").format(new Date()),
+        return new Hit(x, y, r, isHit(x, y, r) ? "Да" : "Нет", new SimpleDateFormat("HH:mm:ss").format(new Date()),
                 (System.nanoTime() - startTime) / 1000000000d);
     }
 
     public boolean isHit(double x, double y, double r) {
-        return true;
+        return checkRectangle(x, y, r) || checkTriangle(x, y, r) || checkCircle(x, y, r);
     }
+
+    public boolean checkRectangle(double x, double y, double r) {
+        return x >= 0 && y <= 0 && y >= -r && x <= r / 2;
+    }
+
+    public boolean checkTriangle(double x, double y, double r) {
+        return y <= (r / 2 + 0.5 * x) && x <= 0 & y >= 0;
+    }
+
+    public boolean checkCircle(double x, double y, double r) {
+        return (x * x + y * y) <= r && x <= 0 && y <= 0;
+    }
+
 }
