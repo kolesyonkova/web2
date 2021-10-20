@@ -54,25 +54,34 @@
 </div>
 <div class="footer">
     <table id="result_table" class="result_table">
-        <tr>
-            <th class="variable">X</th>
-            <th class="variable">Y</th>
-            <th class="variable">R</th>
-            <th>Result</th>
-            <th>Sending time</th>
-            <th>Total processing time</th>
-        </tr>
+        <thead>
+        <th class="variable">X</th>
+        <th class="variable">Y</th>
+        <th class="variable">R</th>
+        <th>Result</th>
+        <th>Sending time</th>
+        <th>Total processing time</th>
+        </thead>
+        <c:forEach var="hit" items="${shotForBean.hitList}">
+            <tr>
+                <td>${hit.x}</td>
+                <td>${hit.y}</td>
+                <td>${hit.r}</td>
+                <c:if test="${hit.result == 'Да'}">
+                    <td>
+                        <div style="color:#279327">${(hit.result)}</div>
+                    </td>
+                </c:if>
+                <c:if test="${hit.result == 'Нет'}">
+                    <td>
+                        <div style="color:#e11a1a">${(hit.result)}</div>
+                    </td>
+                </c:if>
+                <td>${hit.localTime}</td>
+                <td>${hit.processingTime} sec</td>
+            </tr>
+        </c:forEach>
     </table>
-    <c:forEach var="hit" items="${shotForBean.hitList}">
-        <tr>
-            <td>${hit.x}</td>
-            <td>${hit.y}</td>
-            <td>${hit.r}</td>
-            <td>${(hit.result)}</td>
-            <td>${hit.localTime}</td>
-            <td>${hit.processingTime}</td>
-        </tr>
-    </c:forEach>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="index.js"></script>

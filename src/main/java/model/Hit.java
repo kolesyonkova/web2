@@ -8,9 +8,9 @@ public class Hit {
     private double r;
     private String result;
     private String localTime;
-    private double processingTime;
+    private BigDecimal processingTime;
 
-    public Hit(double x, double y, double r, String result, String localTime, double processingTime) {
+    public Hit(double x, double y, double r, String result, String localTime, BigDecimal processingTime) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -59,11 +59,11 @@ public class Hit {
         this.localTime = localTime;
     }
 
-    public double getProcessingTime() {
+    public BigDecimal getProcessingTime() {
         return processingTime;
     }
 
-    public void setProcessingTime(double processingTime) {
+    public void setProcessingTime(BigDecimal processingTime) {
         this.processingTime = processingTime;
     }
 
@@ -74,7 +74,7 @@ public class Hit {
                 "\"rval\":" + "\"" + this.getR() + "\"" + "," +
                 "\"out\":" + "\"" + this.getResult() + "\"" + "," +
                 "\"sendingTime\":" + "\"" + this.getLocalTime() + "\"" + "," +
-                "\"totalProcessingTime\":" + "\"" + String.valueOf(BigDecimal.valueOf(this.getProcessingTime())).substring(0, 8) + " sec" + "\"" +
+                "\"totalProcessingTime\":" + "\"" + String.valueOf(this.processingTime).substring(0, 8) + " sec" + "\"" +
                 "}";
     }
 }

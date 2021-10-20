@@ -4,6 +4,33 @@ let wrongFieldX = document.getElementById("wrong_field_X");
 let wrongFieldY = document.getElementById("wrong_field_Y");
 let wrongFieldR = document.getElementById("wrong_field_R");
 let wrongField = document.getElementById("wrong_field");
+start()
+
+function start() {
+    wrongFieldX.textContent = ""
+    wrongFieldY.textContent = ""
+    wrongFieldR.textContent = ""
+    wrongField.textContent = ""
+    return new Promise(function (resolve) {
+            $.get('servlet', {
+                "clear": "true"
+            }).done(function (data) {
+                    if (data !== "Incorrect coordinates type") {
+                        clearCanvas()
+                        drawCanvas()
+                        let result = JSON.parse(par);
+                        for (let i in result.response) {
+                            drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
+                        }
+                    }
+                }
+            ).fail(function (err) {
+                alert(err);
+            });
+        }
+    )
+        ;
+}
 
 function dataFromButtons() {
     wrongFieldX.textContent = ""
@@ -98,7 +125,6 @@ function submit(valX, valY, valR) {
                                 $('#result_table').append(newRow);
                                 drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
                             }
-
                         }
                     }
                 }

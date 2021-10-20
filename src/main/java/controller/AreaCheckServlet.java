@@ -3,13 +3,12 @@ package controller;
 import model.Hit;
 import model.Results;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,9 +26,6 @@ public class AreaCheckServlet extends HttpServlet {
             double x = Double.parseDouble(req.getParameter("x"));
             double y = Double.parseDouble(req.getParameter("y"));
             double r = Double.parseDouble(req.getParameter("r"));
-//            if (!isValid(x, y, r)) {
-//                throw new NumberFormatException();
-//            }
             Results results = new Results((List<Hit>) req.getSession().getAttribute("shots"));
             Results resultsBean = (Results) req.getSession().getAttribute("shotForBean");
             if (resultsBean == null) resultsBean = new Results();
@@ -40,7 +36,7 @@ public class AreaCheckServlet extends HttpServlet {
                 } else {
                     results.getHitList().add(hit);
                 }
-                resultsBean.getHitList().add(0, hit);
+                resultsBean.getHitList().add(hit);
             } else {
                 return;
             }
@@ -54,12 +50,14 @@ public class AreaCheckServlet extends HttpServlet {
         }
     }
 
+
     private Hit createHit(HttpServletRequest req, long startTime) {
-        double x = Double.parseDouble(req.getParameter("x"));
-        double y = Double.parseDouble(req.getParameter("y"));
-        double r = Double.parseDouble(req.getParameter("r"));
+        double x = Double.parseDouble(req.getParameter("x").replace(",", "."));
+        double y = Double.parseDouble(req.getParameter("y").replace(",", "."));
+        double r = Double.parseDouble(req.getParameter("r").replace(",", "."));
+        BigDecimal pT = BigDecimal.valueOf(Double.parseDouble(String.valueOf(BigDecimal.valueOf((System.nanoTime() - startTime) / 1000000000d)).substring(0, 8)));
         return new Hit(x, y, r, isHit(x, y, r) ? "Да" : "Нет", new SimpleDateFormat("HH:mm:ss").format(new Date()),
-                (System.nanoTime() - startTime) / 1000000000d);
+                pT);
     }
 
     private boolean isValid(double x, double y, double r) {
