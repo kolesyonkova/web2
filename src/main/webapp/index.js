@@ -17,8 +17,10 @@ function dataFromButtons() {
 }
 
 function clear() {
+    clearCanvas()
+    drawCanvas()
     return new Promise(function (resolve) {
-            $.get('/servlet', {
+            $.get('servlet', {
                 'clean': true
             }).done(function (data) {
                     $("#result_table tr:gt(0)").remove();
@@ -59,17 +61,20 @@ function checkY() {
 
 function submit(valX, valY, valR) {
     return new Promise(function (resolve) {
-            $.get('/servlet', {
+            $.get('servlet', {
                 'x': valX,
                 'y': valY,
                 'r': valR
             }).done(function (data) {
+                    clearCanvas()
+                    drawCanvas()
                     $("#result_table tr:gt(0)").remove();
                     console.log(data)
                     let par = data;
                     if (par !== "remove") {
                         let result = JSON.parse(par);
                         for (let i in result.response) {
+                            drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].out)
                             let newRow = '<tr>';
                             newRow += '<td>' + result.response[i].xval + '</td>';
                             newRow += '<td>' + result.response[i].yval + '</td>';
@@ -84,6 +89,7 @@ function submit(valX, valY, valR) {
                             newRow += '<td>' + result.response[i].totalProcessingTime + '</td>';
                             newRow += '</tr>';
                             $('#result_table').append(newRow);
+                            drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
                         }
                     }
                 }
@@ -107,5 +113,8 @@ function clickOnChart(canvas, event) {
     let x = (event.clientX - rect.left - width / 2) / step;
     let y = (height / 2 - event.clientY + rect.top) / step;
     let r = $("#R").val();
+    x = x.toFixed(2).replace(".00", "");
+    y = y.toFixed(2).replace(".00", "");
     submit(x, y, r)
+    drawShoot(x, y, r)
 }

@@ -26,7 +26,7 @@ public class Results {
         List<Hit> hits = hitList;
         String res = "{" + "\"response\":[";
         for (Hit h : hits) {
-            res=res.concat(h.toJson()+",");
+            res = res.concat(h.toJson() + ",");
         }
         res = res.substring(0, res.length() - 1);
         return res + "]}";

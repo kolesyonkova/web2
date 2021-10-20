@@ -14,7 +14,6 @@ function drawCanvas() {
     drawRectangle(valR)
     drawTriangle(valR)
     drawCircle(valR)
-    initCanvas()
 }
 
 function drawTriangle(valR) {
@@ -94,4 +93,38 @@ function clearCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 // Возобновляем матрицу трансформации
     context.restore();
+}
+
+function drawShoot(x, y, r) {
+    let canvas = document.getElementById('canvas');
+    let chart = canvas.getContext('2d');
+    let color;
+    if (checkArea(x, y, r) === 'Да') {
+        color = 'green';
+    } else {
+        color = 'red';
+    }
+    chart.beginPath();
+    chart.arc(canvas.width / 2 + x * step, canvas.height / 2 - y * step, dash, 0, Math.PI * 2);
+    chart.fillStyle = color;
+    chart.strokeStyle = color;
+    chart.globalAlpha = 0.45;
+    chart.fill();
+    chart.stroke();
+}
+
+function checkArea(x, y, r) {
+    return (checkRectangle(x, y, r) || checkTriangle(x, y, r) || checkCircle(x, y, r)) ? 'Да' : 'Нет';
+}
+
+function checkRectangle(x, y, r) {
+    return x >= 0 && y <= 0 && y >= -r && x <= r / 2;
+}
+
+function checkTriangle(x, y, r) {
+    return y <= (r / 2 + 0.5 * x) && x <= 0 && y >= 0;
+}
+
+function checkCircle(x, y, r) {
+    return (x * x + y * y) <= r * r && x <= 0 && y <= 0;
 }

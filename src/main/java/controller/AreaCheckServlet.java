@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@WebServlet("/areaCheckServlet")
+//@WebServlet("/areaCheckServlet")
 public class AreaCheckServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -23,6 +23,12 @@ public class AreaCheckServlet extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         PrintWriter output = resp.getWriter();
         try {
+            double x = Double.parseDouble(req.getParameter("x"));
+            double y = Double.parseDouble(req.getParameter("y"));
+            double r = Double.parseDouble(req.getParameter("r"));
+            if (!isValid(x, y, r)) {
+                throw new NumberFormatException();
+            }
             Hit hit = createHit(req, startTime);
             Results results = new Results((List<Hit>) req.getSession().getAttribute("shots"));
             if (results.getHitList() == null) {
@@ -40,7 +46,7 @@ public class AreaCheckServlet extends HttpServlet {
         }
     }
 
-    public Hit createHit(HttpServletRequest req, long startTime) {
+    private Hit createHit(HttpServletRequest req, long startTime) {
         double x = Double.parseDouble(req.getParameter("x"));
         double y = Double.parseDouble(req.getParameter("y"));
         double r = Double.parseDouble(req.getParameter("r"));
@@ -48,20 +54,24 @@ public class AreaCheckServlet extends HttpServlet {
                 (System.nanoTime() - startTime) / 1000000000d);
     }
 
-    public boolean isHit(double x, double y, double r) {
+    private boolean isValid(double x, double y, double r) {
+        return (x >= -3 && x <= 5) && (y >= -3 && y <= 5) && (r >= 1 && r <= 5);
+    }
+
+    private boolean isHit(double x, double y, double r) {
         return checkRectangle(x, y, r) || checkTriangle(x, y, r) || checkCircle(x, y, r);
     }
 
-    public boolean checkRectangle(double x, double y, double r) {
+    private boolean checkRectangle(double x, double y, double r) {
         return x >= 0 && y <= 0 && y >= -r && x <= r / 2;
     }
 
-    public boolean checkTriangle(double x, double y, double r) {
-        return y <= (r / 2 + 0.5 * x) && x <= 0 & y >= 0;
+    private boolean checkTriangle(double x, double y, double r) {
+        return y <= (r / 2 + 0.5 * x) && x <= 0 && y >= 0;
     }
 
-    public boolean checkCircle(double x, double y, double r) {
-        return (x * x + y * y) <= r*r && x <= 0 && y <= 0;
+    private boolean checkCircle(double x, double y, double r) {
+        return (x * x + y * y) <= r * r && x <= 0 && y <= 0;
     }
 
 }
