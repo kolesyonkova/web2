@@ -1,47 +1,17 @@
-document.getElementById("send-button").addEventListener("click", dataFromButtons);
+// document.getElementById("send-button").addEventListener("click", dataFromButtons);
 document.getElementById("clear-button").addEventListener("click", clear);
 let wrongFieldX = document.getElementById("wrong_field_X");
 let wrongFieldY = document.getElementById("wrong_field_Y");
 let wrongFieldR = document.getElementById("wrong_field_R");
 let wrongField = document.getElementById("wrong_field");
-start()
 
-function start() {
+function readyForm(e) {
     wrongFieldX.textContent = ""
     wrongFieldY.textContent = ""
     wrongFieldR.textContent = ""
     wrongField.textContent = ""
-    return new Promise(function (resolve) {
-            $.get('servlet', {
-                "clear": "true"
-            }).done(function (data) {
-                    if (data !== "Incorrect coordinates type") {
-                        clearCanvas()
-                        drawCanvas()
-                        let result = JSON.parse(par);
-                        for (let i in result.response) {
-                            drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
-                        }
-                    }
-                }
-            ).fail(function (err) {
-                alert(err);
-            });
-        }
-    )
-        ;
-}
-
-function dataFromButtons() {
-    wrongFieldX.textContent = ""
-    wrongFieldY.textContent = ""
-    wrongFieldR.textContent = ""
-    wrongField.textContent = ""
-    let valX = parseFloat(document.getElementById("X").value.substring(0, 10).replace(',', '.'));
-    let valY = $('input[name="y_value"]:checked').val();
-    let valR = $('#R').val();
-    if (checkX() & checkY()) {
-        submit(valX, valY, valR)
+    if (!(checkX() & checkY())) {
+        e.preventDefault();
     }
 }
 
@@ -80,9 +50,9 @@ function checkX() {
 }
 
 function checkY() {
-    let valY = $('input[name="y_value"]:checked').val();
+    let valY = $('input[name="y"]:checked').val();
     if (valY === undefined) {
-        wrongFieldY.textContent = "Выберите хотя бы одно значение Y";
+        wrongFieldY.textContent = "Выберите одно значение Y";
         return false;
     }
     return true;
@@ -97,34 +67,32 @@ function submit(valX, valY, valR) {
             $.get('servlet', {
                 'x': valX,
                 'y': valY,
-                'r': valR
+                'r': valR,
+                'fromCanvas': "true"
             }).done(function (data) {
-                    if (data !== "Incorrect coordinates type") {
-                        clearCanvas()
-                        drawCanvas()
-                        $("#result_table tr:gt(0)").remove();
-                        console.log(data)
-                        let par = data;
-                        if (par !== "remove") {
-                            let result = JSON.parse(par);
-                            for (let i in result.response) {
-                                drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].out)
-                                let newRow = '<tr>';
-                                newRow += '<td>' + result.response[i].xval + '</td>';
-                                newRow += '<td>' + result.response[i].yval + '</td>';
-                                newRow += '<td>' + result.response[i].rval + '</td>';
-                                if (result.response[i].out === "Да") {
-                                    newRow += '<td><div style="color:#279327">' + result.response[i].out + '</div></td>';
-                                } else {
+                    // clearCanvas()
+                    // drawCanvas()
+                    $("#result_table tr:gt(0)").remove();
+                    console.log(data)
+                    let par = data;
+                    if (par !== "remove") {
+                        let result = JSON.parse(par);
+                        for (let i in result.response) {
+                            let newRow = '<tr>';
+                            newRow += '<td>' + result.response[i].xval + '</td>';
+                            newRow += '<td>' + result.response[i].yval + '</td>';
+                            newRow += '<td>' + result.response[i].rval + '</td>';
+                            if (result.response[i].out === "Да") {
+                                newRow += '<td><div style="color:#279327">' + result.response[i].out + '</div></td>';
+                            } else {
 
-                                    newRow += '<td><div style="color:#e11a1a">' + result.response[i].out + '</div></td>';
-                                }
-                                newRow += '<td>' + result.response[i].sendingTime + '</td>';
-                                newRow += '<td>' + result.response[i].totalProcessingTime + '</td>';
-                                newRow += '</tr>';
-                                $('#result_table').append(newRow);
-                                drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
+                                newRow += '<td><div style="color:#e11a1a">' + result.response[i].out + '</div></td>';
                             }
+                            newRow += '<td>' + result.response[i].sendingTime + '</td>';
+                            newRow += '<td>' + result.response[i].totalProcessingTime + '</td>';
+                            newRow += '</tr>';
+                            $('#result_table').append(newRow);
+                            drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
                         }
                     }
                 }
@@ -152,6 +120,20 @@ function clickOnChart(canvas, event) {
     let r = $("#R").val();
     x = x.toFixed(2).replace(".00", "");
     y = y.toFixed(2).replace(".00", "");
-    submit(x, y, r)
+    if (isValid(x, y, r)) {
+        submit(x, y, r)
+    }
     drawShoot(x, y, r)
 }
+
+function isValid(x, y, r) {
+    return (x >= -3 && x <= 5) && (y >= -3 && y <= 5) && (r >= 1 && r <= 5);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("send-button").addEventListener("click", readyForm);
+    // const canvas = document.querySelector('canvas')
+    // canvas.addEventListener('click', function (e) {
+    //     clickOnChart(canvas, e)
+    // })
+});

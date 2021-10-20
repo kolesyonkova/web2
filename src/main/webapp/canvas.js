@@ -14,6 +14,7 @@ function drawCanvas() {
     drawRectangle(valR)
     drawTriangle(valR)
     drawCircle(valR)
+    drawPoints()
 }
 
 function drawTriangle(valR) {
@@ -93,6 +94,15 @@ function clearCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 // Возобновляем матрицу трансформации
     context.restore();
+}
+
+function drawPoints() {
+    let Xs = Array.from(document.getElementsByClassName("the_X")).map(v => v.innerHTML);
+    let Ys = Array.from(document.getElementsByClassName("the_Y")).map(v => v.innerHTML);
+    let Rs = Array.from(document.getElementsByClassName("the_R")).map(v => v.innerHTML);
+    for (let i = 0; i < Xs.length; i++) {
+        drawShoot(Xs[i], Ys[i], Rs[i])
+    }
 }
 
 function drawShoot(x, y, r) {

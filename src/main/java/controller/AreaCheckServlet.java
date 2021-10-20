@@ -3,6 +3,8 @@ package controller;
 import model.Hit;
 import model.Results;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,13 +39,15 @@ public class AreaCheckServlet extends HttpServlet {
                     results.getHitList().add(hit);
                 }
                 resultsBean.getHitList().add(hit);
-            } else {
-                return;
             }
             req.getSession().setAttribute("shotForBean", resultsBean);
             req.getSession().setAttribute("shots", results.getHitList());
-            output.println(results.toJson());
-        } catch (NumberFormatException e) {
+            if (req.getParameter("fromCanvas") == null) {
+                req.getRequestDispatcher(("resultPage.jsp")).forward(req, resp);
+            } else {
+                output.println(results.toJson());
+            }
+        } catch (NumberFormatException | ServletException e) {
             output.println("Incorrect coordinates type");
         } finally {
             output.close();

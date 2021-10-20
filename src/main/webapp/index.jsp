@@ -19,37 +19,39 @@
     <p id="wrong_field" class="wrong"></p>
     </p>
     <%--    <p><img id="imageArea" src="images/areas.jpg" alt="areas"></p>--%>
-    <div id="input_field_X" class="validate">
-        <p class="variable">X=
-            <label for="X"></label><input id="X" type="text" placeholder="Enter X:">
-        </p>
-        <p id="wrong_field_X" class="wrong"></p>
-    </div>
-    <div id="input_field_Y" class="validate">
-        <p class="variable">Y=
-            <label>
-                <input type="radio" value="1" name="y_value">1
-                <input type="radio" value="2" name="y_value">2
-                <input type="radio" value="3" name="y_value">3
-                <input type="radio" value="4" name="y_value">4
-                <input type="radio" value="5" name="y_value">5
-            </label>
-        </p>
-        <p id="wrong_field_Y" class="wrong"></p>
-    </div>
-    <div id="input_field_R" class="validate">
-        <p class="variable">R=
-            <label for='R'></label><select id='R' class="select-css">
-                <option name="R" value="1">1</option>
-                <option name="R" value="2">2</option>
-                <option name="R" value="3">3</option>
-                <option name="R" value="4">4</option>
-                <option name="R" value="5">5</option>
-            </select>
-        </p>
-        <p id="wrong_field_R" class="wrong"></p>
-    </div>
-    <button id="send-button" class="sliding-button" type="submit">Отправить</button>
+    <form id="form" method="get" action="<%= request.getContextPath() %>/servlet">
+        <div id="input_field_X" class="validate">
+            <p class="variable">X=
+                <label for="X"></label><input id="X" type="text" name="x" placeholder="Enter X:">
+            </p>
+            <p id="wrong_field_X" class="wrong"></p>
+        </div>
+        <div id="input_field_Y" class="validate">
+            <p class="variable">Y=
+                <label>
+                    <input type="radio" value="1" name="y">1
+                    <input type="radio" value="2" name="y">2
+                    <input type="radio" value="3" name="y">3
+                    <input type="radio" value="4" name="y">4
+                    <input type="radio" value="5" name="y">5
+                </label>
+            </p>
+            <p id="wrong_field_Y" class="wrong"></p>
+        </div>
+        <div id="input_field_R" class="validate">
+            <p class="variable">R=
+                <label for='R'></label><select id='R' class="select-css" name="r">
+                    <option name="R" value="1">1</option>
+                    <option name="R" value="2">2</option>
+                    <option name="R" value="3">3</option>
+                    <option name="R" value="4">4</option>
+                    <option name="R" value="5">5</option>
+                </select>
+            </p>
+            <p id="wrong_field_R" class="wrong"></p>
+        </div>
+        <button id="send-button" class="sliding-button" type="submit">Отправить</button>
+    </form>
     <button id="clear-button" class="sliding-button" type="submit">Очистить историю запросов</button>
 </div>
 <div class="footer">
