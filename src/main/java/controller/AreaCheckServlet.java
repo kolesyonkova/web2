@@ -3,7 +3,6 @@ package controller;
 import model.Hit;
 import model.Results;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +38,9 @@ public class AreaCheckServlet extends HttpServlet {
                     results.getHitList().add(hit);
                 }
                 resultsBean.getHitList().add(hit);
+            } else {
+                output.println(results.toJson());
+                return;
             }
             req.getSession().setAttribute("shotForBean", resultsBean);
             req.getSession().setAttribute("shots", results.getHitList());

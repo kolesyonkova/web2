@@ -75,6 +75,9 @@ function submit(valX, valY, valR) {
                     $("#result_table tr:gt(0)").remove();
                     console.log(data)
                     let par = data;
+                    if (par === "Incorrect coordinates type" || par == null||par==="") {
+                        return;
+                    }
                     if (par !== "remove") {
                         let result = JSON.parse(par);
                         for (let i in result.response) {
@@ -132,8 +135,4 @@ function isValid(x, y, r) {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("send-button").addEventListener("click", readyForm);
-    // const canvas = document.querySelector('canvas')
-    // canvas.addEventListener('click', function (e) {
-    //     clickOnChart(canvas, e)
-    // })
 });
