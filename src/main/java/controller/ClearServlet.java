@@ -14,6 +14,7 @@ public class ClearServlet extends HttpServlet {
         PrintWriter output = resp.getWriter();
         try {
             req.getSession().setAttribute("shots", null);
+            req.getSession().setAttribute("shotForBean", null);
             output.println("remove");
         } finally {
             output.close();

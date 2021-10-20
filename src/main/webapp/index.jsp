@@ -1,4 +1,7 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="model.Hit" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<jsp:useBean id="shotForBean" class="model.Results" scope="session"/>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,6 +16,7 @@
 <div class="container">
     <p>
         <canvas id="canvas"></canvas>
+    <p id="wrong_field" class="wrong"></p>
     </p>
     <%--    <p><img id="imageArea" src="images/areas.jpg" alt="areas"></p>--%>
     <div id="input_field_X" class="validate">
@@ -59,6 +63,16 @@
             <th>Total processing time</th>
         </tr>
     </table>
+    <c:forEach var="hit" items="${shotForBean.hitList}">
+        <tr>
+            <td>${hit.x}</td>
+            <td>${hit.y}</td>
+            <td>${hit.r}</td>
+            <td>${(hit.result)}</td>
+            <td>${hit.localTime}</td>
+            <td>${hit.processingTime}</td>
+        </tr>
+    </c:forEach>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="index.js"></script>

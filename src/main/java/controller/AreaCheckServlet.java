@@ -3,6 +3,7 @@ package controller;
 import model.Hit;
 import model.Results;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,20 +27,27 @@ public class AreaCheckServlet extends HttpServlet {
             double x = Double.parseDouble(req.getParameter("x"));
             double y = Double.parseDouble(req.getParameter("y"));
             double r = Double.parseDouble(req.getParameter("r"));
-            if (!isValid(x, y, r)) {
-                throw new NumberFormatException();
-            }
-            Hit hit = createHit(req, startTime);
+//            if (!isValid(x, y, r)) {
+//                throw new NumberFormatException();
+//            }
             Results results = new Results((List<Hit>) req.getSession().getAttribute("shots"));
-            if (results.getHitList() == null) {
-                results = new Results(Stream.of(hit).collect(Collectors.toList()));
+            Results resultsBean = (Results) req.getSession().getAttribute("shotForBean");
+            if (resultsBean == null) resultsBean = new Results();
+            if (isValid(x, y, r)) {
+                Hit hit = createHit(req, startTime);
+                if (results.getHitList() == null) {
+                    results = new Results(Stream.of(hit).collect(Collectors.toList()));
+                } else {
+                    results.getHitList().add(hit);
+                }
+                resultsBean.getHitList().add(0, hit);
             } else {
-                results.getHitList().add(hit);
+                return;
             }
+            req.getSession().setAttribute("shotForBean", resultsBean);
             req.getSession().setAttribute("shots", results.getHitList());
             output.println(results.toJson());
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             output.println("Incorrect coordinates type");
         } finally {
             output.close();

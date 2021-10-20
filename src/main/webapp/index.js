@@ -3,11 +3,13 @@ document.getElementById("clear-button").addEventListener("click", clear);
 let wrongFieldX = document.getElementById("wrong_field_X");
 let wrongFieldY = document.getElementById("wrong_field_Y");
 let wrongFieldR = document.getElementById("wrong_field_R");
+let wrongField = document.getElementById("wrong_field");
 
 function dataFromButtons() {
     wrongFieldX.textContent = ""
     wrongFieldY.textContent = ""
     wrongFieldR.textContent = ""
+    wrongField.textContent = ""
     let valX = parseFloat(document.getElementById("X").value.substring(0, 10).replace(',', '.'));
     let valY = $('input[name="y_value"]:checked').val();
     let valR = $('#R').val();
@@ -60,36 +62,43 @@ function checkY() {
 }
 
 function submit(valX, valY, valR) {
+    wrongFieldX.textContent = ""
+    wrongFieldY.textContent = ""
+    wrongFieldR.textContent = ""
+    wrongField.textContent = ""
     return new Promise(function (resolve) {
             $.get('servlet', {
                 'x': valX,
                 'y': valY,
                 'r': valR
             }).done(function (data) {
-                    clearCanvas()
-                    drawCanvas()
-                    $("#result_table tr:gt(0)").remove();
-                    console.log(data)
-                    let par = data;
-                    if (par !== "remove") {
-                        let result = JSON.parse(par);
-                        for (let i in result.response) {
-                            drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].out)
-                            let newRow = '<tr>';
-                            newRow += '<td>' + result.response[i].xval + '</td>';
-                            newRow += '<td>' + result.response[i].yval + '</td>';
-                            newRow += '<td>' + result.response[i].rval + '</td>';
-                            if (result.response[i].out === "Да") {
-                                newRow += '<td><div style="color:#279327">' + result.response[i].out + '</div></td>';
-                            } else {
+                    if (data !== "Incorrect coordinates type") {
+                        clearCanvas()
+                        drawCanvas()
+                        $("#result_table tr:gt(0)").remove();
+                        console.log(data)
+                        let par = data;
+                        if (par !== "remove") {
+                            let result = JSON.parse(par);
+                            for (let i in result.response) {
+                                drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].out)
+                                let newRow = '<tr>';
+                                newRow += '<td>' + result.response[i].xval + '</td>';
+                                newRow += '<td>' + result.response[i].yval + '</td>';
+                                newRow += '<td>' + result.response[i].rval + '</td>';
+                                if (result.response[i].out === "Да") {
+                                    newRow += '<td><div style="color:#279327">' + result.response[i].out + '</div></td>';
+                                } else {
 
-                                newRow += '<td><div style="color:#e11a1a">' + result.response[i].out + '</div></td>';
+                                    newRow += '<td><div style="color:#e11a1a">' + result.response[i].out + '</div></td>';
+                                }
+                                newRow += '<td>' + result.response[i].sendingTime + '</td>';
+                                newRow += '<td>' + result.response[i].totalProcessingTime + '</td>';
+                                newRow += '</tr>';
+                                $('#result_table').append(newRow);
+                                drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
                             }
-                            newRow += '<td>' + result.response[i].sendingTime + '</td>';
-                            newRow += '<td>' + result.response[i].totalProcessingTime + '</td>';
-                            newRow += '</tr>';
-                            $('#result_table').append(newRow);
-                            drawShoot(result.response[i].xval, result.response[i].yval, result.response[i].rval)
+
                         }
                     }
                 }
@@ -112,6 +121,8 @@ function clickOnChart(canvas, event) {
     let height = canvas.height;
     let x = (event.clientX - rect.left - width / 2) / step;
     let y = (height / 2 - event.clientY + rect.top) / step;
+    // let x = (event.clientX - rect.x- width / 2) / step;
+    // let y = (height / 2 - event.clientY + rect.y) / step;
     let r = $("#R").val();
     x = x.toFixed(2).replace(".00", "");
     y = y.toFixed(2).replace(".00", "");
